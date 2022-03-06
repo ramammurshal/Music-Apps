@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // hanya mengizinkan untuk mengakses collection /playlists/
+    // docId hanya catch id dari doc itu, gaperlu diubah
+    // {} itu disebut wild card
+    match /playlists/{docId} {
+      // izinkan read dan create jika user login
+      allow read, create: if request.auth != null
+      // izinkan delete dan update jika uid user login == userId salah satu data di collection playlist
+      allow delete, update: if request.auth.uid == resource.data.userId
+    }
+  }
+}
